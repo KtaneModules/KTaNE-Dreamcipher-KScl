@@ -11,8 +11,6 @@ using RNG = UnityEngine.Random;
 
 public class Dreamcipher : MonoBehaviour
 {
-	private EncLogic MCFuncs;
-
 	// Standardized logging
 	private static int globalLogID = 0;
 	private int thisLogID;
@@ -384,10 +382,10 @@ public class Dreamcipher : MonoBehaviour
 		return ourWord;
 	}
 
-	Dictionary<char, int> GenerateAlphabet(char startPoint, out int outlineData /*, out List<string> retLog*/)
+	Dictionary<char, int> GenerateAlphabet(char startPoint, out int outlineData, out List<string> retLog)
 	{
 		int nextGlyph = 0;
-		//List<string> log = new List<string>(); // work around CS1628
+		List<string> log = new List<string>(); // work around CS1628
 
 		// xorshift16 to generate a new 16-bit number after exhausting all bits
 		int prngSeed = outlineData = RNG.Range(1, 65536);
@@ -401,11 +399,11 @@ public class Dreamcipher : MonoBehaviour
 			prngSeed &= 0xFFFF;
 			prngSeed ^= (prngSeed << prngShiftC);
 			prngSeed &= 0xFFFF;
-			//log.Add(String.Format("* xorshift16({0},{1},{2}) => {3}",
-			//	prngShiftA, prngShiftB, prngShiftC, Convert.ToString(prngSeed, 2).PadLeft(16, '0')));
+			log.Add(String.Format("* xorshift16({0},{1},{2}) => {3}",
+				prngShiftA, prngShiftB, prngShiftC, Convert.ToString(prngSeed, 2).PadLeft(16, '0')));
 		};
-		//log.Add("Generated binary numbers:");
-		//log.Add(String.Format("* Outlines to binary => {0}", Convert.ToString(prngSeed, 2).PadLeft(16, '0')));
+		log.Add("Generated binary numbers:");
+		log.Add(String.Format("* Outlines to binary => {0}", Convert.ToString(prngSeed, 2).PadLeft(16, '0')));
 
 		// The leftmost eight bits of the initial seed are used for starting position.
 		nextGlyph = prngSeed >> 8;
@@ -438,7 +436,7 @@ public class Dreamcipher : MonoBehaviour
 
 			invertedDict.Add(nextGlyph, c);
 		}
-/*
+
 		// Remove unnecessary xorshift log at the end -- replace with header for next section
 		log[log.Count - 1] = "Glyph alphabet translation table:"; 
 
@@ -450,10 +448,10 @@ public class Dreamcipher : MonoBehaviour
 
 			log[log.Count - 1] += (invertedDict.ContainsKey(i)) ? invertedDict[i] : '-';
 		}
-*/
+
 		// Now, invert the dictionary the other way, and return it!
 		Dictionary<char, int> alphabet = invertedDict.ToDictionary(x => x.Value, x => x.Key);
-		//retLog = log;
+		retLog = log;
 		return alphabet;
 	}
 
@@ -505,8 +503,8 @@ public class Dreamcipher : MonoBehaviour
 		if (alphabetStartLetter == 0) // Letterless serial number?
 			alphabetStartLetter = 'A'; // We'll just act like it ended with an A.
 
-		//List<string> alphabetLog = new List<string>();
-		Dictionary<char, int> glyphAlphabet = GenerateAlphabet(alphabetStartLetter, out outlineData);
+		List<string> alphabetLog = new List<string>();
+		Dictionary<char, int> glyphAlphabet = GenerateAlphabet(alphabetStartLetter, out outlineData, out alphabetLog);
 
 		// Use the alphabet we just created to transcribe the word, then add random decoy glyphs to pad to 15.
 		// Then set outlined/filled shapes after adding the separator, for 16 bits of extra information displayed.
@@ -516,14 +514,19 @@ public class Dreamcipher : MonoBehaviour
 		transcription = AddOutlineData(transcription, outlineData);
 		glyphList = transcription.ToArray();
 
-/*		Debug.LogFormat("[Dreamcipher #{0}] The chosen word is '{1}'.", thisLogID, targetWord);
+		Debug.LogFormat("[Dreamcipher #{0}] The chosen word is '{1}'.", thisLogID, targetWord);
 		string glyphs = "Displayed sequence of glyphs: ";
 		for (int i = 0; i < 15; ++i)
-			glyphs += String.Format("{0}[{1},{2}]{3}", glyphList[i] >= OUTLINE_OFFSET ? "Outline" : "Filled", glyphList[i] % 8, (glyphList[i] / 8) % 8, i == 14 ? "" : "; ");
-		Debug.LogFormat("[Dreamcipher #{0}] {1}", thisLogID, glyphs);
+		{
+			if (glyphList[i] >= OUTLINE_OFFSET)
+				glyphs += String.Format("{0}{1}, ", (char)((glyphList[i] - OUTLINE_OFFSET) % 8 + 'A'), ((glyphList[i] - OUTLINE_OFFSET) / 8) % 8 + 1);
+			else
+				glyphs += String.Format("{0}{1}*, ", (char)(glyphList[i] % 8 + 'A'), (glyphList[i] / 8) % 8 + 1);
+		}
+		Debug.LogFormat("[Dreamcipher #{0}] {1}SEP{2}", thisLogID, glyphs, glyphList[15] >= OUTLINE_OFFSET ? "" : "*");
 		foreach (string s in alphabetLog)
 			Debug.LogFormat("[Dreamcipher #{0}] {1}", thisLogID, s);
-*/
+
 		// Just in case someone was playing with the module before it was on...
 		moduleActive = true;
 		wordInput = "";
@@ -572,6 +575,8 @@ public class Dreamcipher : MonoBehaviour
 
 		if (answerCorrect)
 		{
+			Debug.LogFormat("[Dreamcipher #{0}] SOLVE: Submitted '{1}'. Correct.", thisLogID, wordInput);
+
 			bombAudio.PlaySoundAtTransform("Shutdown", gameObject.transform);
 			if (!colorOverride)
 				AssignWordDisplayColor(0, 15, new Color(0f, 1f, 0f, 1f));
@@ -582,6 +587,8 @@ public class Dreamcipher : MonoBehaviour
 		}
 		else if (!skipStrike)
 		{
+			Debug.LogFormat("[Dreamcipher #{0}] STRIKE: Submitted '{1}'. Wrong.", thisLogID, wordInput);
+
 			bombAudio.PlaySoundAtTransform("Error", gameObject.transform);
 			if (!colorOverride)
 				AssignWordDisplayColor(0, 15, new Color(1f, 0f, 0f, 1f));
@@ -589,6 +596,8 @@ public class Dreamcipher : MonoBehaviour
 			wordInput = "";
 			wordClearCoroutine = StartCoroutine(FadeOutAndClearWordDisplay());
 		}
+		else if (!wordInput.Equals(""))
+			Debug.LogFormat("[Dreamcipher #{0}] Submitted '{1}'. No strike was given because that's an easter egg.", thisLogID, wordInput);
 
 		// Yes, it's intentional that easter eggs that skip strikes stay on screen
 		StartCoroutine(DisplayGlyphs(false));
@@ -759,10 +768,6 @@ public class Dreamcipher : MonoBehaviour
 		backButton.OnInteract += DeletePress;
 
 		bombModule.OnActivate += GenerateAnswer;
-
-		// Module Challenge only
-		MCFuncs = new EncLogic(thisLogID);
-		bombModule.OnActivate += MCFuncs.dGF1bnQK;
 	}
 
 
@@ -859,26 +864,12 @@ public class Dreamcipher : MonoBehaviour
 		yield break;
 	}
 
-	void TwitchHandleForcedSolve()
+	IEnumerator TwitchHandleForcedSolve()
 	{
 		if (moduleSolved)
-			return;
+			yield break;
 
-		//Debug.LogFormat("[Dreamcipher #{0}] Force solve requested by Twitch Plays. Inputting the correct answer automatically...", thisLogID);
-		//StartCoroutine(ProcessTwitchCommand(String.Format("submit {0}", targetWord)));
-
-		// Module Challenge force solve: Doesn't reveal answer.
-		inInputMode = !inInputMode; // Ends whatever display coroutine is ongoing.
-
-		string[] taunts = new string[] {
-			"FORCESOLVED",
-			"YOUDIDNOTHING",
-			"NOHINTSHERE",
-			"TOTALLYLEGIT"
-		};
-		wordInput = taunts[RNG.Range(0,taunts.Length)];
-		UpdateWordDisplay();
-		moduleSolved = true;
-		bombModule.HandlePass();
+		Debug.LogFormat("[Dreamcipher #{0}] Force solve requested by Twitch Plays.", thisLogID);
+		yield return ProcessTwitchCommand(String.Format("submit {0}", targetWord));
 	}
 }
