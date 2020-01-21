@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Dreamcipher — Keep Talking and Nobody Explodes Module</title>
+        <meta name="viewport" content="initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" type="text/css" href="css/font.css">
+        <script src="js/ktane-utils.js"></script>
+        <style>
+            table {
+                width: 100%;
+            }
+            td {
+                width:12.5%;
+                position: relative;
+                padding: 0.5% 12% 12% 0.5%;
+            }
+            .glyph {
+                width:93.5%;
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="section">
+            <div class="page page-bg-06">
+                <div class="page-header">
+                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                    <span class="page-header-section-title">Dreamcipher</span>
+                </div>
+                <div class="page-content">
+                    <img src="img/Component/Dreamcipher.svg" class="diagram">
+                    <h2>On the Subject of the Dreamcipher</h2>
+                    <p class="flavour-text">Are you lucid enough to parse somebody <strong>else's</strong> dream?</p>
+                    <ul>
+                        <li>Some of the glyphs on the module correspond to letters of the English alphabet; the other glyphs are decoys.</li>
+                        <li>Determine the glyph alphabet using the steps below.</li>
+                        <li>After determining the glyph alphabet, convert each glyph on the module back to a letter in order, treating outlined versions of glyphs the same as their filled counterparts. Ignore any glyphs that are not in the glyph alphabet.</li>
+                        <li>The decrypted word will always be a valid English word between 8 and 15 characters in length.</li>
+                    </ul>
+                    <h3>Recreating the Glyph Alphabet</h3>
+                    <ul>
+                        <li>Start by creating a series of 16 bits from the glyphs shown on the module, where each bit is 0 if the glyph is outlined and 1 if it is filled.
+                            <br>
+                            <i>(The leftmost bit corresponds to the first glyph displayed.)</i></li>
+                        <li>Take the leftmost eight bits, and convert them to a decimal number.</li>
+                        <li>Use that number to determine the starting glyph, starting from 0 in the top left and proceeding in reading order. Wrap around if necessary.</li>
+                        <li>Take the next four bits, and convert them to a decimal number.</li>
+                        <li>Add one to that number, and advance that many additional glyphs, wrapping around if necessary. The resulting glyph corresponds to the last letter in the serial number.</li>
+                        <li>Proceed likewise for the next four bits, and the next letter of the English alphabet.</li>
+                        <li>If a glyph that has already been used is landed on, advance one more glyph.</li>
+                        <li>Once all bits have been used, determine a new series of bits by doing the following:</li>
+                        <ul>
+                            <li>Let <i>x</i> be the previous series of bits.</li>
+                            <li>Shift <i>x</i> left by 1 plus the first digit in the serial number, XOR that value with <i>x</i>, and save the result as <i>x</i>.</li>
+                            <li>Shift <i>x</i> right by 1 plus the last digit in the serial number, XOR that value with <i>x</i>, and save the result as <i>x</i>.</li>
+                            <li>Shift <i>x</i> left by 1 plus (the sum of digits in the serial number, mod 15), and XOR that value with <i>x</i>. The result is the new series of bits.</li>
+                        </ul>
+                        <li>Repeat the above operations until every letter in the English alphabet has been mapped to a glyph.</li>
+                    </ul>
+                </div>
+                <div class="page-footer relative-footer">Page 1 of 2</div>
+            </div>
+            <div class="page">
+                <div class="page-header">
+                    <span class="page-header-doc-title">Keep Talking and Nobody Explodes Mod</span>
+                    <span class="page-header-section-title">Dreamcipher</span>
+                </div>
+                <div class="page-content">
+                    <h3>Notes</h3>
+                    <ul>
+                        <li>Each glyph has both outlined and filled versions that may appear on the module.  The table below only shows the filled versions.</li>
+                        <li>The separator is a small horizontal line that does not appear in the table.  It only serves to mark the end of the sequence, and never translates to a letter.  However, it can be filled or outlined like any other glyph.</li>
+                    </ul>
+                    <h3>Known Glyphs</h3>
+                    <br>
+                    <table>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-00.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-01.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-02.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-03.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-04.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-05.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-06.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-07.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-10.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-11.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-12.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-13.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-14.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-15.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-16.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-17.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-20.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-21.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-22.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-23.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-24.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-25.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-26.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-27.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-30.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-31.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-32.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-33.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-34.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-35.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-36.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-37.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-40.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-41.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-42.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-43.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-44.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-45.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-46.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-47.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-50.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-51.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-52.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-53.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-54.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-55.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-56.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-57.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-60.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-61.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-62.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-63.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-64.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-65.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-66.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-67.svg" class="glyph"></td>
+                        </tr>
+                        <tr>
+                            <td><img src="img/Dreamcipher/glyph-70.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-71.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-72.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-73.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-74.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-75.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-76.svg" class="glyph"></td>
+                            <td><img src="img/Dreamcipher/glyph-77.svg" class="glyph"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="page-footer relative-footer">Page 2 of 2</div>
+            </div>
+        </div>
+    </body>
+</html>

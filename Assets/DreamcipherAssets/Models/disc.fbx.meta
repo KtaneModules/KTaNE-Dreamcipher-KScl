@@ -1,0 +1,171 @@
+fileFormatVersion: 2
+guid: f79e06c329a85468893d6996c86db6bf
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Cylinder
+    100004: Disc
+    100006: Button_L
+    100008: OuterDisc
+    100010: Button_L_Target
+    100012: Button_L_Highlight
+    100014: Button_IN
+    100016: Button_IN_Target
+    100018: Button_IN_Highlight
+    100020: Button_OUT
+    100022: Button_OUT_Target
+    100024: Button_OUT_Highlight
+    100026: Button_UIN
+    100028: Button_UIN_Highlight
+    100030: Button_UIN_Target
+    100032: Button_L_TargetBeta
+    400000: //RootNode
+    400002: Cylinder
+    400004: Disc
+    400006: Button_L
+    400008: OuterDisc
+    400010: Button_L_Target
+    400012: Button_L_Highlight
+    400014: Button_IN
+    400016: Button_IN_Target
+    400018: Button_IN_Highlight
+    400020: Button_OUT
+    400022: Button_OUT_Target
+    400024: Button_OUT_Highlight
+    400026: Button_UIN
+    400028: Button_UIN_Highlight
+    400030: Button_UIN_Target
+    400032: Button_L_TargetBeta
+    2100000: No Name
+    2100002: Material.001
+    2300000: //RootNode
+    2300002: Cylinder
+    2300004: Disc
+    2300006: Button_L
+    2300008: OuterDisc
+    2300010: Button_L_Target
+    2300012: Button_L_Highlight
+    2300014: Button_IN
+    2300016: Button_IN_Target
+    2300018: Button_IN_Highlight
+    2300020: Button_OUT
+    2300022: Button_OUT_Target
+    2300024: Button_OUT_Highlight
+    2300026: Button_UIN
+    2300028: Button_UIN_Highlight
+    2300030: Button_UIN_Target
+    2300032: Button_L_TargetBeta
+    3300000: //RootNode
+    3300002: Cylinder
+    3300004: Disc
+    3300006: Button_L
+    3300008: OuterDisc
+    3300010: Button_L_Target
+    3300012: Button_L_Highlight
+    3300014: Button_IN
+    3300016: Button_IN_Target
+    3300018: Button_IN_Highlight
+    3300020: Button_OUT
+    3300022: Button_OUT_Target
+    3300024: Button_OUT_Highlight
+    3300026: Button_UIN
+    3300028: Button_UIN_Highlight
+    3300030: Button_UIN_Target
+    3300032: Button_L_TargetBeta
+    4300000: Cylinder
+    4300002: Disc
+    4300004: OuterDisc
+    4300006: Button_L
+    4300008: Button_L_Target
+    4300010: Button_L_Highlight
+    4300012: Button_IN
+    4300014: Button_IN_Target
+    4300016: Button_IN_Highlight
+    4300018: Button_OUT
+    4300020: Button_OUT_Target
+    4300022: Button_OUT_Highlight
+    4300024: Button_UIN
+    4300026: Button_UIN_Target
+    4300028: Button_UIN_Highlight
+    4300030: Button_L_TargetBeta
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
