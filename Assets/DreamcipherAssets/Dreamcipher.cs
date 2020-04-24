@@ -815,7 +815,7 @@ public class Dreamcipher : MonoBehaviour
 
 				directionButtons[0].OnInteract();
 				// Why doesn't this work in a WaitWhile or WaitUntil? What is Unity doing‽
-				while (!(TwitchShouldCancelCommand || (glyphDisplayAngle >= targetAngle && glyphDisplayAngle <= targetAngle+4f)))
+				while (!(TwitchShouldCancelCommand || (glyphDisplayAngle >= targetAngle && glyphDisplayAngle <= targetAngle + (Time.deltaTime*240f))))
 					yield return null;
 				directionButtons[0].OnInteractEnded();
 
