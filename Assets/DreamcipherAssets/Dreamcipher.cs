@@ -37,7 +37,7 @@ public class Dreamcipher : MonoBehaviour
 
 	private bool glyphDisplayFullyOn = false;
 	private float glyphDisplayAngle = 70f;
-	private int staticDisplayCycles = 0;
+	private float staticDisplayTimer = -1f;
 	private float inputDisplayAngle = 290f;
 
 	// Returns color object, modifies transform to place in proper location
@@ -61,7 +61,7 @@ public class Dreamcipher : MonoBehaviour
 		Color dispColor = new Color(1f, 1f, 1f, 1f);
 
 		inInputMode = false;
-		staticDisplayCycles = 0;
+		staticDisplayTimer = -1f;
 
 		// Fade in controller (skipped the first time around)
 		if (!firstTime)
@@ -70,8 +70,10 @@ public class Dreamcipher : MonoBehaviour
 		// Main loop
 		while (!inInputMode)
 		{
-			if (--staticDisplayCycles < 0)
-				glyphDisplayAngle += 0.2f;
+			if (staticDisplayTimer < 0)
+				glyphDisplayAngle += Time.deltaTime*12f; // Framerate independent
+			else
+				staticDisplayTimer -= Time.deltaTime;
 
 			curAngle = glyphDisplayAngle;
 			for (cyPos = 0; curAngle > 290f; curAngle -= 45f, ++cyPos);
@@ -93,9 +95,10 @@ public class Dreamcipher : MonoBehaviour
 			}
 			else if (glyphDisplayFullyOn && glyphDisplayAngle <= 250f)
 				glyphDisplayAngle += 720f;
-			else if (!glyphDisplayFullyOn && glyphDisplayAngle <= 70f)
+
+			if (glyphDisplayAngle <= 70f)
 				glyphDisplayAngle = 70f;
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 
 		// Smooth fadeaway when input mode is engaged
@@ -114,7 +117,7 @@ public class Dreamcipher : MonoBehaviour
 				dispColor.a = origAlpha[glPos] * alpha;
 				glyphDisplays[glPos].color = dispColor;
 			}
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 		for (glPos = 0; glPos < glyphDisplays.Length; ++glPos)
 			glyphDisplays[glPos].gameObject.SetActive(false);
@@ -123,6 +126,7 @@ public class Dreamcipher : MonoBehaviour
 
 	IEnumerator DisplayInput()
 	{
+		float timeBoundary;
 		float curAngle, angleTarget, distToTarget;
 		string display = "NOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLM";
 		int cyPos, txPos;
@@ -143,22 +147,31 @@ public class Dreamcipher : MonoBehaviour
 				inputDisplayAngle += (inputDisplayAngle > 804f) ? -624f : 624f; // Warp to the other side...
 				distToTarget = angleTarget - inputDisplayAngle; // Then recalculate.
 			}
-			inputDisplayAngle += Mathf.Clamp(distToTarget/8, -4f, 4f);
+			timeBoundary = (Time.deltaTime*240f);
+			inputDisplayAngle += Mathf.Clamp(distToTarget/8, -timeBoundary, timeBoundary);
 
-			curAngle = inputDisplayAngle;
-			for (cyPos = 0; curAngle > 290f; curAngle -= 24f, ++cyPos);
-			for (txPos = 0; curAngle > 70f; curAngle -= 24f, ++cyPos, ++txPos)
+			try
 			{
-				charDisplays[txPos].gameObject.SetActive(true);
-				charDisplays[txPos].text = ""+display[cyPos];
-				charDisplays[txPos].color = SetUpAngledDisplay(curAngle, ((cyPos+13)%26 == inputOnChar) ? hiliteColor : dispColor, charDisplays[txPos].transform);
+				curAngle = inputDisplayAngle;
+				for (cyPos = 0; curAngle > 290f; curAngle -= 24f, ++cyPos);
+				for (txPos = 0; curAngle > 70f; curAngle -= 24f, ++cyPos, ++txPos)
+				{
+					charDisplays[txPos].gameObject.SetActive(true);
+					charDisplays[txPos].text = ""+display[cyPos];
+					charDisplays[txPos].color = SetUpAngledDisplay(curAngle, ((cyPos+13)%26 == inputOnChar) ? hiliteColor : dispColor, charDisplays[txPos].transform);
+				}
+				for (; txPos < charDisplays.Length; ++txPos)
+					charDisplays[txPos].gameObject.SetActive(false);
 			}
-			for (; txPos < charDisplays.Length; ++txPos)
-				charDisplays[txPos].gameObject.SetActive(false);
+			catch (IndexOutOfRangeException)
+			{
+				// Aha! Screw your lagspikes. Go back to a sane value.
+				inputDisplayAngle = 492f;
+			}
 
 			if (dispColor.a < 0.99f && (dispColor.a += 0.05f) > 0.99f)
 				dispColor.a = 1f;
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 
 		// Smooth fadeaway when input mode is disengaged
@@ -177,7 +190,7 @@ public class Dreamcipher : MonoBehaviour
 				dispColor.a = origAlpha[txPos] * alpha;
 				charDisplays[txPos].color = dispColor;
 			}
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 		for (txPos = 0; txPos < charDisplays.Length; ++txPos)
 			charDisplays[txPos].gameObject.SetActive(false);
@@ -269,7 +282,7 @@ public class Dreamcipher : MonoBehaviour
 				if (RNG.Range(-3.4f, 0.6f) > fade)
 					wordDisplays[i].text = ""+(_randomRemap[RNG.Range(0, _randomRemap.Length)]);
 			}
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 
 		for (i = 0; i < numDisplays; ++i)
@@ -297,7 +310,7 @@ public class Dreamcipher : MonoBehaviour
 				dispColors[i].a = fade;
 				wordDisplays[i].color = dispColors[i];
 			}
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			yield return null;
 		}
 
 		for (i = 0; i < numDisplays; ++i)
@@ -630,9 +643,9 @@ public class Dreamcipher : MonoBehaviour
 	{
 		while (true)
 		{
-			staticDisplayCycles = Math.Max(staticDisplayCycles, 60*7);
-			glyphDisplayAngle += amount;
-			yield return new WaitForSeconds(0.012f); // Realistically will run at 60fps
+			staticDisplayTimer = Mathf.Max(staticDisplayTimer, 7f);
+			glyphDisplayAngle += Time.deltaTime * amount;
+			yield return null;
 		}
 		// Unreachable
 	}
@@ -650,7 +663,7 @@ public class Dreamcipher : MonoBehaviour
 		if (inInputMode)
 			holdCoroutine = StartCoroutine(InputHoldCoroutine(right ? 25 : 1));
 		else
-			holdCoroutine = StartCoroutine(GlyphHoldCoroutine(right ? -2.0f : 2.0f));
+			holdCoroutine = StartCoroutine(GlyphHoldCoroutine(right ? -120f : 120f));
 		return false;
 	}
 
@@ -711,7 +724,7 @@ public class Dreamcipher : MonoBehaviour
 		// Not inputting: Force symbols to move again
 		if (!inInputMode)
 		{
-			staticDisplayCycles = 0;
+			staticDisplayTimer = -1f;
 			return false;
 		}
 
@@ -741,7 +754,7 @@ public class Dreamcipher : MonoBehaviour
 		// Not inputting: Force symbols to stop
 		if (!inInputMode)
 		{
-			staticDisplayCycles = 60*60*60*4;
+			staticDisplayTimer = Mathf.Infinity;
 			return false;
 		}
 
